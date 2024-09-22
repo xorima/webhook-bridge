@@ -1,18 +1,34 @@
 package app
 
 import (
+	"fmt"
 	_ "github-bridge/docs"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
+	"log/slog"
+	"net/http"
 )
 
+const swaggerPath = "/swagger"
+
 type SwaggerHandler struct {
+	log *slog.Logger
 }
 
-func NewSwaggerHandler() *SwaggerHandler {
-	return &SwaggerHandler{}
+func NewSwaggerHandler(log *slog.Logger) *SwaggerHandler {
+	return &SwaggerHandler{
+		log: log.With(slog.String("handler", "swagger")),
+	}
+}
+
+func (sh *SwaggerHandler) Redirect(w http.ResponseWriter, r *http.Request) {
+	sh.log.Info(fmt.Sprintf("redirecting to %s/", swaggerPath), slog.String("path", r.URL.Path))
+	w.Header().Set("Location", fmt.Sprintf("%s/", swaggerPath))
+	w.WriteHeader(http.StatusFound)
 }
 
 func (sh *SwaggerHandler) RegisterRoutes(r Router) {
-	r.Mount("/swagger", httpSwagger.WrapHandler)
-
+	r.Mount(swaggerPath, httpSwagger.WrapHandler)
+	r.Get("/", sh.Redirect)
+	r.Get("/swagger-ui", sh.Redirect)
+	r.Get(swaggerPath, sh.Redirect)
 }

@@ -25,26 +25,52 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "GitHub webhook"
+                    "Webhooks"
                 ],
                 "summary": "This API is there to receive the GitHub events.",
                 "responses": {
                     "200": {
                         "description": "Successful Response",
                         "schema": {
-                            "$ref": "#/definitions/app.Webhook"
+                            "$ref": "#/definitions/app.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/app.Webhook"
+                            "$ref": "#/definitions/app.Response"
                         }
                     },
                     "404": {
                         "description": "Failure Response",
                         "schema": {
-                            "$ref": "#/definitions/app.Webhook"
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/healthz": {
+            "get": {
+                "description": "Returns the health of this instance.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "This API is there to receive the health of this instance.",
+                "responses": {
+                    "200": {
+                        "description": "Healthy",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
                         }
                     }
                 }
@@ -52,8 +78,16 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "app.Webhook": {
-            "type": "object"
+        "app.Response": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
         }
     }
 }`

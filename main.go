@@ -1,11 +1,19 @@
 package main
 
-import "github-bridge/internal/app"
+import (
+	"github-bridge/internal/app"
+	"github.com/xorima/slogger"
+)
 
 func main() {
-	h := app.NewApp()
+	loggerOpts := slogger.NewLoggerOpts(
+		"github-bridge",
+		"github-bridge")
+	logger := slogger.NewLogger(loggerOpts, slogger.WithLevel("debug"))
+	logger.Info("starting app")
+	h := app.NewApp(logger)
 	err := h.Run()
 	if err != nil {
-		panic(err)
+		logger.Error("runtime error", slogger.ErrorAttr(err))
 	}
 }
