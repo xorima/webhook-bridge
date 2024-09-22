@@ -1,0 +1,30 @@
+definitions:
+  app.Webhook:
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/webhook/github:
+    post:
+      consumes:
+      - application/json
+      description: Once received, this will add them to the event stream for consumers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/app.Webhook'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Webhook'
+        "404":
+          description: Failure Response
+          schema:
+            $ref: '#/definitions/app.Webhook'
+      summary: This API is there to receive the GitHub events.
+      tags:
+      - GitHub webhook
+swagger: "2.0"

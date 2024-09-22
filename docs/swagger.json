@@ -1,0 +1,48 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/v1/webhook/github": {
+            "post": {
+                "description": "Once received, this will add them to the event stream for consumers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GitHub webhook"
+                ],
+                "summary": "This API is there to receive the GitHub events.",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "schema": {
+                            "$ref": "#/definitions/app.Webhook"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Webhook"
+                        }
+                    },
+                    "404": {
+                        "description": "Failure Response",
+                        "schema": {
+                            "$ref": "#/definitions/app.Webhook"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "app.Webhook": {
+            "type": "object"
+        }
+    }
+}
