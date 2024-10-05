@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/xorima/slogger"
 	"log/slog"
 	"net/http"
 )
@@ -26,7 +27,10 @@ func (h *HealthHandler) Get(w http.ResponseWriter, r *http.Request) {
 	h.log.Info("returning health check", slog.String("user-agent", r.UserAgent()))
 	resp := NewResponse(http.StatusOK, "Healthy")
 	w.WriteHeader(resp.Status)
-	w.Write(resp.ToJson())
+	_, err := w.Write(resp.ToJson())
+	if err != nil {
+		h.log.Error("failure in writing health status", slogger.ErrorAttr(err))
+	}
 }
 
 func (h *HealthHandler) RegisterRoutes(r Router) {

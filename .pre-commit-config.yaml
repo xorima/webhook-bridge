@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: make-docs
+        name: generate swagger
+        entry: make docs
+        language: system
+      - id: make-test
+        name: run tests
+        entry: make test
+        language: system
+      - id: make-lint
+        name: golangci-lint
+        entry: make lint
+        language: system
