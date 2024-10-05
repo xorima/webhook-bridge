@@ -2,8 +2,8 @@ package app
 
 import (
 	"fmt"
-	_ "github-bridge/docs"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
+	_ "github.com/xorima/webhook-bridge/docs"
 	"log/slog"
 	"net/http"
 )
