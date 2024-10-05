@@ -3,9 +3,9 @@ package redisClient
 import (
 	"context"
 	"fmt"
-	"github-bridge/internal/data/topic"
 	"github.com/redis/go-redis/v9"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/data/topic"
 	"log/slog"
 	"strings"
 )

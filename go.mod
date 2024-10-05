@@ -1,4 +1,4 @@
-module github-bridge
+module github.com/xorima/webhook-bridge
 
 go 1.23.1
 

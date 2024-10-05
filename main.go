@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github-bridge/internal/app"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/app"
 )
 
 func main() {
 	loggerOpts := slogger.NewLoggerOpts(
-		"github-bridge",
-		"github-bridge")
+		"github.com/xorima/webhook-bridge",
+		"github.com/xorima/webhook-bridge")
 	logger := slogger.NewLogger(loggerOpts, slogger.WithLevel("debug"))
 	logger.Info("starting app")
 	h := app.NewApp(logger)

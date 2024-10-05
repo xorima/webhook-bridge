@@ -3,10 +3,10 @@ package redisClient
 import (
 	"context"
 	"fmt"
-	"github-bridge/internal/data/topic"
-	"github-bridge/internal/testhelpers/containers"
 	"github.com/stretchr/testify/assert"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/data/topic"
+	"github.com/xorima/webhook-bridge/internal/testhelpers/containers"
 	"testing"
 )
 
