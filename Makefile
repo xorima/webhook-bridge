@@ -7,6 +7,7 @@ build: docs test
 	go build
 
 docs:
+	go install github.com/swaggo/swag/cmd/swag@latest
 	swag init
 
 run: docs test
