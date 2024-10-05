@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/xorima/slogger"
 	"log/slog"
 	"net/http"
 )
@@ -30,7 +31,10 @@ func (wh *WebhookHandler) Post(w http.ResponseWriter, r *http.Request) {
 	wh.log.Info("got request")
 	resp := NewResponse(http.StatusAccepted, "Accepted")
 	w.WriteHeader(resp.Status)
-	w.Write(resp.ToJson())
+	_, err := w.Write(resp.ToJson())
+	if err != nil {
+		wh.log.Error("failure in writing webhook response", slogger.ErrorAttr(err))
+	}
 }
 
 func (wh *WebhookHandler) RegisterRoutes(r Router) {
