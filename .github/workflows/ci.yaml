@@ -41,7 +41,7 @@ jobs:
         run: go mod tidy
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
 
   yamllint:
     runs-on: ubuntu-latest
