@@ -9,7 +9,14 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Jason Field",
+            "url": "https://github.com/xorima"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/xorima/webhook-bridge/blob/main/LICENSE"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -29,7 +36,7 @@ const docTemplate = `{
                 ],
                 "summary": "This API is there to receive the GitHub events.",
                 "responses": {
-                    "200": {
+                    "202": {
                         "description": "Successful Response",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
@@ -89,17 +96,21 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "externalDocs": {
+        "description": "GitHub",
+        "url": "https://github.com/xorima/webhook-bridge"
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Host:             "localhost:3000",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Webhook Bridge API",
+	Description:      "This is a bridge to receive various webhook events and publish them to a channel.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
