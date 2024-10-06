@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   app.Response:
     properties:
@@ -6,8 +7,20 @@ definitions:
       status:
         type: integer
     type: object
+externalDocs:
+  description: GitHub
+  url: https://github.com/xorima/webhook-bridge
+host: localhost:3000
 info:
-  contact: {}
+  contact:
+    name: Jason Field
+    url: https://github.com/xorima
+  description: This is a bridge to receive various webhook events and publish them
+    to a channel.
+  license:
+    name: MIT
+    url: https://github.com/xorima/webhook-bridge/blob/main/LICENSE
+  title: Webhook Bridge API
 paths:
   /api/v1/webhook/github:
     post:
@@ -17,7 +30,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           description: Successful Response
           schema:
             $ref: '#/definitions/app.Response'
