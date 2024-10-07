@@ -24,12 +24,12 @@ func NewHealthHandler(log *slog.Logger) *HealthHandler {
 //	@Failure		500	{object}	app.Response	"Internal Server Error"
 //	@Router			/healthz [get]
 func (h *HealthHandler) Get(w http.ResponseWriter, r *http.Request) {
-	h.log.Info("returning health check", slog.String("user-agent", r.UserAgent()))
+	h.log.InfoContext(r.Context(), "returning health check", slog.String("user-agent", r.UserAgent()))
 	resp := NewResponse(http.StatusOK, "Healthy")
 	w.WriteHeader(resp.Status)
 	_, err := w.Write(resp.ToJson())
 	if err != nil {
-		h.log.Error("failure in writing health status", slogger.ErrorAttr(err))
+		h.log.ErrorContext(r.Context(), "failure in writing health status", slogger.ErrorAttr(err))
 	}
 }
 

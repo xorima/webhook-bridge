@@ -8,7 +8,7 @@ type EventManager interface {
 
 // EventProducer adds an Event to the Channel
 type EventProducer interface {
-	Produce(ctx context.Context, channel Channel, event Event) error
+	Produce(ctx context.Context, channel *Channel, event *Event) error
 }
 
 type EventConsumer interface {

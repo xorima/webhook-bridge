@@ -25,10 +25,10 @@ func NewWebhookHandler(log *slog.Logger) *WebhookHandler {
 //	@Produce		json
 //	@Success		202	{object} Response	"Successful Response"
 //	@Failure		    401	{object} Response	"Unauthorized"
-//	@Failure		  404	{object} Response		"Failure Response"
+//	@Failure		  400	{object} Response		"Bad Request"
 //	@Router			/api/v1/webhook/github [post]
 func (wh *WebhookHandler) Post(w http.ResponseWriter, r *http.Request) {
-	wh.log.Info("got request")
+	wh.log.InfoContext(r.Context(), "got request")
 	resp := NewResponse(http.StatusAccepted, "Accepted")
 	w.WriteHeader(resp.Status)
 	_, err := w.Write(resp.ToJson())

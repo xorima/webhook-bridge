@@ -21,7 +21,7 @@ func NewSwaggerHandler(log *slog.Logger) *SwaggerHandler {
 }
 
 func (sh *SwaggerHandler) Redirect(w http.ResponseWriter, r *http.Request) {
-	sh.log.Info(fmt.Sprintf("redirecting to %s/", swaggerPath), slog.String("path", r.URL.Path))
+	sh.log.InfoContext(r.Context(), fmt.Sprintf("redirecting to %s/", swaggerPath), slog.String("path", r.URL.Path))
 	w.Header().Set("Location", fmt.Sprintf("%s/", swaggerPath))
 	w.WriteHeader(http.StatusFound)
 }
