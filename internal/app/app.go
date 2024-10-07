@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/xorima/slogger"
 	"github.com/xorima/webhook-bridge/internal/controllers"
+	"github.com/xorima/webhook-bridge/internal/infrastructure/config"
 	"log/slog"
 	"net"
 	"net/http"
@@ -22,7 +23,8 @@ type App struct {
 	router Router
 }
 
-func NewApp(log *slog.Logger, controller controllers.Controller) *App {
+func NewApp(log *slog.Logger, controller controllers.Controller, cfg *config.AppConfig) *App {
+	hmac := NewAuthHmacMiddleware(log, cfg.GitHubConfig())
 	app := &App{
 		port:   3000,
 		router: chi.NewRouter(),
@@ -35,8 +37,9 @@ func NewApp(log *slog.Logger, controller controllers.Controller) *App {
 		hh.RegisterRoutes(r)
 	})
 	wh := NewWebhookHandler(app.log, controller)
+
 	app.router.Route("/api", func(r Router) {
-		wh.RegisterRoutes(r)
+		wh.RegisterRoutes(r, hmac)
 	})
 	return app
 }

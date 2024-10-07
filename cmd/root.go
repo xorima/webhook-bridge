@@ -31,7 +31,7 @@ var rootCmd = &cobra.Command{
 			githubController.NewController(logger,
 				redisClient.NewClient(cfg.RedisConfig(), logger),
 				"local", "webhook", "bridge",
-			),
+			), cfg,
 		)
 		docs.SwaggerInfo.Version = cfg.Version()
 		docs.SwaggerInfo.Host = cfg.Hostname()
