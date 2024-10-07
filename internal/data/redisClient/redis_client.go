@@ -3,6 +3,7 @@ package redisClient
 import (
 	"github.com/redis/go-redis/v9"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/infrastructure/config"
 	"log/slog"
 )
 
@@ -11,11 +12,11 @@ type Client struct {
 	log    *slog.Logger
 }
 
-func NewClient(addr, password string, db int, log *slog.Logger) *Client {
+func NewClient(cfg config.RedisCfg, log *slog.Logger) *Client {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Password: password,
-		DB:       db,
+		Addr:     cfg.Hostname(),
+		Password: cfg.Password(),
+		DB:       cfg.DB(),
 	})
 
 	return &Client{
