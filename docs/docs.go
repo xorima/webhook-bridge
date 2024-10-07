@@ -42,14 +42,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
                     },
-                    "404": {
-                        "description": "Failure Response",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
