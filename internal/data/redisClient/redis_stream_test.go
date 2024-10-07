@@ -21,7 +21,7 @@ func TestClient_Produce(t *testing.T) {
 			err := cont.Stop(ctx)
 			assert.NoError(t, err)
 		}(cont, ctx)
-		c := NewClient(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), "", 0, slogger.NewDevNullLogger())
+		c := NewClient(newMockRedisCfg(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), 0), slogger.NewDevNullLogger())
 		attrs := []topic.Attribute{topic.NewAttribute("type", "foo"), topic.NewAttribute("logging-key", "123456789")}
 		version, body := "1.0.0", "hello-world"
 		event := topic.NewEvent(version, body, attrs...)
@@ -55,7 +55,7 @@ func TestClient_Produce(t *testing.T) {
 			err := cont.Stop(ctx)
 			assert.NoError(t, err)
 		}(cont, ctx)
-		c := NewClient(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), "", 0, slogger.NewDevNullLogger())
+		c := NewClient(newMockRedisCfg(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), 0), slogger.NewDevNullLogger())
 		attrs := []topic.Attribute{topic.NewAttribute("type", "foo"), topic.NewAttribute("logging-key", "123456789")}
 		version, body := "1.0.0", "hello-world"
 		event := topic.NewEvent(version, body, attrs...)
@@ -77,7 +77,7 @@ func TestClient_Consume(t *testing.T) {
 			err := cont.Stop(ctx)
 			assert.NoError(t, err)
 		}(cont, ctx)
-		c := NewClient(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), "", 0, slogger.NewDevNullLogger())
+		c := NewClient(newMockRedisCfg(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), 0), slogger.NewDevNullLogger())
 		channel := topic.NewChannel("testclient").WithPrefix("this", "is", "a", "test")
 		consumer := topic.NewConsumer("foo", "bar")
 		_, err = c.Consume(ctx, channel, consumer)
@@ -92,7 +92,7 @@ func TestClient_Consume(t *testing.T) {
 			err := cont.Stop(ctx)
 			assert.NoError(t, err)
 		}(cont, ctx)
-		c := NewClient(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), "", 0, slogger.NewDevNullLogger())
+		c := NewClient(newMockRedisCfg(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), 0), slogger.NewDevNullLogger())
 		attrs := []topic.Attribute{topic.NewAttribute("type", "foo"), topic.NewAttribute("logging-key", "123456789")}
 		version, body := "1.0.0", "hello-world"
 		event := topic.NewEvent(version, body, attrs...)
@@ -127,7 +127,7 @@ func TestClient_Consume(t *testing.T) {
 			err := cont.Stop(ctx)
 			assert.NoError(t, err)
 		}(cont, ctx)
-		c := NewClient(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), "", 0, slogger.NewDevNullLogger())
+		c := NewClient(newMockRedisCfg(fmt.Sprintf("127.0.0.1:%d", cont.GetRedisPort(ctx)), 0), slogger.NewDevNullLogger())
 		attrs := []topic.Attribute{topic.NewAttribute("type", "foo"), topic.NewAttribute("logging-key", "123456789")}
 		version, body := "1.0.0", "hello-world"
 		event := topic.NewEvent(version, body, attrs...)

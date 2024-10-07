@@ -1,5 +1,8 @@
 .PHONY: test build docs run
 
+fmt:
+	go fmt
+
 test: docs
 	go test ./...
 

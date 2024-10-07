@@ -1,6 +1,10 @@
 repos:
   - repo: local
     hooks:
+      - id: make-fmt
+        name: go fmt
+        entry: make fmt
+        language: system
       - id: make-docs
         name: generate swagger
         entry: make docs
