@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/assert"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/controllers"
 	"net/http"
 	"testing"
 )
@@ -12,6 +13,9 @@ func TestNewController(t *testing.T) {
 	t.Run("it should create without issue", func(t *testing.T) {
 		c := NewController(slogger.NewDevNullLogger(), newMockProducer(nil))
 		assert.NotNil(t, c.producer)
+	})
+	t.Run("it should implement the controller interface", func(t *testing.T) {
+		assert.Implements(t, (*controllers.Controller)(nil), NewController(slogger.NewDevNullLogger(), newMockProducer(nil)))
 	})
 }
 

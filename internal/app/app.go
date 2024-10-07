@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/controllers"
 	"log/slog"
 	"net"
 	"net/http"
@@ -21,7 +22,7 @@ type App struct {
 	router Router
 }
 
-func NewApp(log *slog.Logger) *App {
+func NewApp(log *slog.Logger, controller controllers.Controller) *App {
 	app := &App{
 		port:   3000,
 		router: chi.NewRouter(),
@@ -33,7 +34,7 @@ func NewApp(log *slog.Logger) *App {
 		sh.RegisterRoutes(r)
 		hh.RegisterRoutes(r)
 	})
-	wh := NewWebhookHandler(app.log)
+	wh := NewWebhookHandler(app.log, controller)
 	app.router.Route("/api", func(r Router) {
 		wh.RegisterRoutes(r)
 	})
