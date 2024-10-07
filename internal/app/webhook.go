@@ -2,17 +2,20 @@ package app
 
 import (
 	"github.com/xorima/slogger"
+	"github.com/xorima/webhook-bridge/internal/controllers"
 	"log/slog"
 	"net/http"
 )
 
 type WebhookHandler struct {
-	log *slog.Logger
+	log  *slog.Logger
+	ctrl controllers.Controller
 }
 
-func NewWebhookHandler(log *slog.Logger) *WebhookHandler {
+func NewWebhookHandler(log *slog.Logger, controller controllers.Controller) *WebhookHandler {
 	return &WebhookHandler{
-		log: log.With(slog.String("handler", "webhook")),
+		log:  log.With(slog.String("handler", "webhook")),
+		ctrl: controller,
 	}
 }
 
@@ -28,12 +31,17 @@ func NewWebhookHandler(log *slog.Logger) *WebhookHandler {
 //	@Failure		  400	{object} Response		"Bad Request"
 //	@Router			/api/v1/webhook/github [post]
 func (wh *WebhookHandler) Post(w http.ResponseWriter, r *http.Request) {
-	wh.log.InfoContext(r.Context(), "got request")
 	resp := NewResponse(http.StatusAccepted, "Accepted")
-	w.WriteHeader(resp.Status)
-	_, err := w.Write(resp.ToJson())
+	wh.log.InfoContext(r.Context(), "got request")
+	err := wh.ctrl.Process(r.Context(), r.Header, r.Body)
 	if err != nil {
-		wh.log.Error("failure in writing webhook response", slogger.ErrorAttr(err))
+		wh.log.ErrorContext(r.Context(), "failure during processing of event", slogger.ErrorAttr(err))
+		resp = NewResponse(http.StatusBadRequest, "Bad Request")
+	}
+	w.WriteHeader(resp.Status)
+	_, err = w.Write(resp.ToJson())
+	if err != nil {
+		wh.log.ErrorContext(r.Context(), "failure in writing webhook response", slogger.ErrorAttr(err))
 	}
 }
 

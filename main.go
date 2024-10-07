@@ -4,6 +4,8 @@ import (
 	"github.com/xorima/slogger"
 	"github.com/xorima/webhook-bridge/docs"
 	"github.com/xorima/webhook-bridge/internal/app"
+	"github.com/xorima/webhook-bridge/internal/controllers/githubController"
+	"github.com/xorima/webhook-bridge/internal/data/redisClient"
 	"os"
 )
 
@@ -27,7 +29,11 @@ func main() {
 		"github.com/xorima/webhook-bridge")
 	logger := slogger.NewLogger(loggerOpts, slogger.WithLevel("debug"))
 	logger.Info("starting app")
-	h := app.NewApp(logger)
+	h := app.NewApp(logger,
+		githubController.NewController(logger,
+			redisClient.NewClient("127.0.0.1:6379", "", 0, logger), "local", "webhook", "bridge",
+		),
+	)
 	docs.SwaggerInfo.Version = getVersion()
 	docs.SwaggerInfo.Host = getHost()
 	err := h.Run()
