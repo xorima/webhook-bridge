@@ -41,13 +41,13 @@ func TestController_Process(t *testing.T) {
 	})
 	t.Run("it should publish the body to the correct queue", func(t *testing.T) {
 		p := newMockProducer(nil)
-		c := NewController(slogger.NewDevNullLogger(), p)
+		c := NewController(slogger.NewDevNullLogger(), p, "test", "webhook", "bridge")
 		headers := http.Header{}
-		headers.Add(githubEventHeader, "pull-request")
+		headers.Add(githubEventHeader, "pullRequest")
 		err := c.Process(context.Background(), headers, NewMockBody("hello world"))
 		assert.NoError(t, err)
 		assert.Equal(t, "hello world", p.event.Body)
-		assert.Equal(t, "pull-request", p.event.Attributes[0].Value)
-		assert.Equal(t, "github-events", p.channel.Name)
+		assert.Equal(t, "pull-request", p.channel.Name)
+		assert.Equal(t, []string{"test", "webhook", "bridge", "github"}, p.channel.Prefix)
 	})
 }

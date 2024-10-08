@@ -10,6 +10,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"unicode"
 )
 
 const githubEventHeader = "X-GitHub-Event"
@@ -45,10 +46,15 @@ func (c *Controller) Process(ctx context.Context, header http.Header, body io.Re
 		c.log.WarnContext(ctx, "unable to parse body", slogger.ErrorAttr(err))
 		return errs.WrapError(err, ErrCannotReadBody)
 	}
+	return c.githubEventTopics(ctx, e, string(b))
+}
 
-	chn := topic.NewChannel("github-events")
-	evt := topic.NewEvent("1.0.0", string(b), topic.NewAttribute("event", e))
-	err = c.producer.Produce(ctx, chn, evt)
+func (c *Controller) githubEventTopics(ctx context.Context, event, body string) error {
+	// the purpose of this is to fan out events to correct queues based on the topic names.
+	name := pascalToHyphen(event)
+	chn := topic.NewChannel(name).WithPrefix(c.prefix...).WithPrefix("github")
+	evt := topic.NewEvent("1.0.0", body)
+	err := c.producer.Produce(ctx, chn, evt)
 	if err != nil {
 		c.log.ErrorContext(ctx, ErrFailedToPublish.Error(), slogger.ErrorAttr(err))
 		return errs.WrapError(err, ErrFailedToPublish)
@@ -56,4 +62,13 @@ func (c *Controller) Process(ctx context.Context, header http.Header, body io.Re
 	return nil
 }
 
-// check the type based on header, put to right queue.
+func pascalToHyphen(s string) string {
+	var result []rune
+	for i, r := range s {
+		if unicode.IsUpper(r) && i > 0 {
+			result = append(result, '-')
+		}
+		result = append(result, unicode.ToLower(r))
+	}
+	return string(result)
+}

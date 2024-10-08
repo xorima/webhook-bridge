@@ -13,6 +13,6 @@ func NewChannel(name string) *Channel {
 // this will be used by the event sender to set the correct
 // named channel based on the end system's naming rules.
 func (c *Channel) WithPrefix(prefix ...string) *Channel {
-	c.Prefix = prefix
+	c.Prefix = append(c.Prefix, prefix...)
 	return c
 }
