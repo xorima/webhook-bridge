@@ -38,12 +38,7 @@ func (wh *WebhookHandler) Post(w http.ResponseWriter, r *http.Request) {
 		wh.log.ErrorContext(r.Context(), "failure during processing of event", slogger.ErrorAttr(err))
 		resp = NewResponse(http.StatusBadRequest, "Bad Request")
 	}
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(resp.Status)
-	_, err = w.Write(resp.ToJson())
-	if err != nil {
-		wh.log.ErrorContext(r.Context(), "failure in writing webhook response", slogger.ErrorAttr(err))
-	}
+	resp.WriteResponse(w)
 }
 
 func (wh *WebhookHandler) RegisterRoutes(r Router, hmac *AuthHmac) {
