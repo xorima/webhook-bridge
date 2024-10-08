@@ -29,15 +29,11 @@ The application can be configured using environment variables or a configuration
 | `API_VERSION`         | The version of the api                     | (Set in Docker at build time to version tag) |
 | `API_HOSTNAME`        | Hostname for this api                      | `"localhost:3000"`                           |
 | `REDIS_HOSTNAME`      | Redis server hostname                      |                                              |
-| `REDIS_PASSWORD`      | Redis server password                      |                                              | 
-| `REDIS_DB`            | Redis database number                      | `0`                                          | 
-| `GITHUB_HMAC_ENABLED` | Enable HMAC validation for GitHub webhooks | `true`                                       |
-| `GITHUB_HMAC_SECRET`  | HMAC secret for GitHub webhooks            |                                              |
+| `REDIS_PASSWORD`      | Redis server password                      |                                              | https://github.com/xorima/webhook-bridge
 
-### Configuration File
 
 The application can also be configured using a YAML configuration file. The default configuration file name is `config.yaml`, and it can be placed in `/etc/app/` or the current directory.
-Using the cli args you can also set a custom configuration file path.
+Using the cli args you can also set a custom configuration file path.              
 
 ```yaml
 log:
