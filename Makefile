@@ -14,7 +14,7 @@ docs:
 	swag init
 
 run: docs test
-	go run .
+	GITHUB_HMAC_ENABLED=false go run .
 
 lint:
 	docker run --rm -v $(shell pwd):/app -v ~/.cache/golangci-lint/v1.61.0:/root/.cache -w /app golangci/golangci-lint:v1.61.0 golangci-lint run
