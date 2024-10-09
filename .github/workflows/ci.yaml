@@ -11,18 +11,20 @@ jobs:
   go-test:
     name: Go Test
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
       - name: Run go test
-        run: make test
+        run: go test -v  -cover -coverprofile=coverage.txt  ./internal/...
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   golangci:
     name: Go Lint
@@ -31,15 +33,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
-
       - name: Run go mod tidy
         run: go mod tidy
-
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
 
