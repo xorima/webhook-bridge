@@ -4,8 +4,7 @@ fmt:
 	go fmt
 
 test: docs
-	go test ./...
-
+	go test
 build: docs test
 	go build
 
