@@ -13,14 +13,16 @@ import (
 
 var cfgFile string
 
+const name = "webhook-bridge"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "webhook-bridge",
+	Use:   name,
 	Short: "A webserver that bridges webhooks to event producers",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		loggerOpts := slogger.NewLoggerOpts(
-			"webhook-bridge",
-			"webhook-bridge")
+			name,
+			name)
 		cfg, err := config.NewAppConfig(slogger.NewLogger(loggerOpts), cfgFile)
 		if err != nil {
 			return err
