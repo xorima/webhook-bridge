@@ -61,3 +61,28 @@ jobs:
           check-modified-files-only: "yes"
           base-branch: "main"
           file-path: ''
+
+  build:
+    name: Build Golang Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos:
+          - "linux"
+          - "windows"
+          - "darwin"
+        goarch:
+          - "amd64"
+          - "arm64"
+        exclude:
+          - goarch: "arm64"
+            goos: "windows"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - name: Run build
+        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o bin/webhook-bridge-${{ matrix.goos }}-${{ matrix.goarch }} main.go
