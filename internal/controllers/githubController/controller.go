@@ -41,9 +41,9 @@ func NewController(log *slog.Logger, producer topic.EventProducer, prefix ...str
 }
 
 func (c *Controller) Process(ctx context.Context, header http.Header, body io.ReadCloser) error {
-	e := header.Get("X-GitHub-Event")
+	e := header.Get(githubEventHeader)
 	if e == "" {
-		c.log.WarnContext(ctx, "header empty", slog.String("header", "X-GitHub-Event"))
+		c.log.WarnContext(ctx, "header empty", slog.String("header", githubEventHeader))
 		return ErrMissingHeader
 	}
 	b, err := io.ReadAll(body)
