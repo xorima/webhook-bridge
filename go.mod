@@ -6,12 +6,14 @@ require (
 	github.com/docker/go-connections v0.5.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/redis/go-redis/v9 v9.6.1
+	github.com/samber/slog-chi v1.11.2
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.3
 	github.com/testcontainers/testcontainers-go v0.33.0
+	github.com/xorima/hmacvalidator v1.0.0
 	github.com/xorima/slogger v0.0.1
 )
 
@@ -75,7 +77,6 @@ require (
 	github.com/swaggo/files/v2 v2.0.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
-	github.com/xorima/hmacvalidator v1.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect

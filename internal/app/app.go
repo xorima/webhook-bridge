@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	slogchi "github.com/samber/slog-chi"
 	"github.com/xorima/slogger"
 	"github.com/xorima/webhook-bridge/internal/controllers"
 	"github.com/xorima/webhook-bridge/internal/infrastructure/config"
@@ -30,6 +31,7 @@ func NewApp(log *slog.Logger, controller controllers.Controller, cfg *config.App
 		router: chi.NewRouter(),
 		log:    slogger.SubLogger(log, "app"),
 	}
+	app.router.Use(slogchi.New(app.log))
 	sh := NewSwaggerHandler(app.log)
 	hh := NewHealthHandler(app.log)
 	app.router.Route("/", func(r Router) {
