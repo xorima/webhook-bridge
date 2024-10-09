@@ -2,6 +2,7 @@ package githubController
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/xorima/slogger"
@@ -13,12 +14,16 @@ import (
 	"unicode"
 )
 
-const githubEventHeader = "X-GitHub-Event"
+const (
+	githubEventHeader    = "X-GitHub-Event"
+	githubDeliveryHeader = "X-GitHub-Delivery"
+)
 
 var (
-	ErrMissingHeader   = fmt.Errorf("missing %s header from request", githubEventHeader)
-	ErrCannotReadBody  = errors.New("unable to read body")
-	ErrFailedToPublish = errors.New("unable to publish message onto producer")
+	ErrMissingHeader        = fmt.Errorf("missing %s header from request", githubEventHeader)
+	ErrCannotReadBody       = errors.New("unable to read body")
+	ErrFailedToPublish      = errors.New("unable to publish message onto producer")
+	ErrUnableToEnhanceEvent = errors.New("unable to enhance event with additional attributes")
 )
 
 type Controller struct {
@@ -46,15 +51,19 @@ func (c *Controller) Process(ctx context.Context, header http.Header, body io.Re
 		c.log.WarnContext(ctx, "unable to parse body", slogger.ErrorAttr(err))
 		return errs.WrapError(err, ErrCannotReadBody)
 	}
-	return c.githubEventTopics(ctx, e, string(b))
+	return c.githubEventTopics(ctx, e, string(b), header)
 }
 
-func (c *Controller) githubEventTopics(ctx context.Context, event, body string) error {
+func (c *Controller) githubEventTopics(ctx context.Context, event, body string, header http.Header) error {
 	// the purpose of this is to fan out events to correct queues based on the topic names.
 	name := pascalToHyphen(event)
 	chn := topic.NewChannel(name).WithPrefix(c.prefix...).WithPrefix("github")
-	evt := topic.NewEvent("1.0.0", body)
-	err := c.producer.Produce(ctx, chn, evt)
+	attr, err := c.enhanceEvent(ctx, event, body, header)
+	if err != nil {
+		return err
+	}
+	evt := topic.NewEvent("1.0.0", body, attr...)
+	err = c.producer.Produce(ctx, chn, evt)
 	if err != nil {
 		c.log.ErrorContext(ctx, ErrFailedToPublish.Error(), slogger.ErrorAttr(err))
 		return errs.WrapError(err, ErrFailedToPublish)
@@ -71,4 +80,23 @@ func pascalToHyphen(s string) string {
 		result = append(result, unicode.ToLower(r))
 	}
 	return string(result)
+}
+
+// enhanceEvent is responsible for adding in attributes/metadata for the event which could be useful
+func (c *Controller) enhanceEvent(ctx context.Context, event, body string, headers http.Header) ([]topic.Attribute, error) {
+	var resp []topic.Attribute
+	var data map[string]any
+	err := json.Unmarshal([]byte(body), &data)
+	if err != nil {
+		return nil, errs.WrapError(err, ErrUnableToEnhanceEvent)
+	}
+	action, exists := data["action"]
+	if exists {
+		resp = append(resp, topic.NewAttribute("action", action))
+	}
+	id := headers.Get("X-GitHub-Delivery")
+	if id != "" {
+		resp = append(resp, topic.NewAttribute("delivery-id", id))
+	}
+	return resp, nil
 }
