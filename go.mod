@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/docker/go-connections v0.5.0
 	github.com/go-chi/chi/v5 v5.2.1
-	github.com/redis/go-redis/v9 v9.8.0
+	github.com/redis/go-redis/v9 v9.13.0
 	github.com/samber/slog-chi v1.14.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
